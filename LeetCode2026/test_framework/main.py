@@ -3,12 +3,9 @@
 Main entry point for running tests.
 
 Usage:
-    python main.py                    # Run with default algorithm and test cases
-    python main.py --timing           # Show execution time for each test
-    python main.py --quiet            # Only show summary
-    
-To use custom files:
-    Modify the imports below or use run_custom_tests()
+    python main.py -a solution.py -f solve    # Test file auto-detected as solution_test.py
+    python main.py -a solution.py -f solve --timing
+    python main.py -a solution.py -f solve --quiet
 """
 
 import argparse
@@ -79,7 +76,7 @@ def run_from_files(
         run_from_files(
             algorithm_file="my_solution.py",
             algorithm_name="solve",
-            test_cases_file="my_tests.py"
+            test_cases_file="my_solution_test.py"
         )
     """
     # Load algorithm
@@ -103,18 +100,13 @@ def main():
     parser = argparse.ArgumentParser(description="Run algorithm tests")
     parser.add_argument(
         "--algorithm", "-a",
-        default="algorithm.py",
-        help="Path to algorithm file (default: algorithm.py)"
+        required=True,
+        help="Path to algorithm file"
     )
     parser.add_argument(
         "--function", "-f",
-        default="find_roots",
-        help="Function name in algorithm file (default: find_roots)"
-    )
-    parser.add_argument(
-        "--tests", "-t",
-        default="test_cases.py",
-        help="Path to test cases file (default: test_cases.py)"
+        required=True,
+        help="Function name in algorithm file"
     )
     parser.add_argument(
         "--timing",
@@ -129,11 +121,14 @@ def main():
 
     args = parser.parse_args()
 
+    # Derive test file from algorithm file: solution.py -> solution_test.py
+    test_file = args.algorithm.replace(".py", "_test.py")
+
     try:
         result = run_from_files(
             algorithm_file=args.algorithm,
             algorithm_name=args.function,
-            test_cases_file=args.tests,
+            test_cases_file=test_file,
             verbose=not args.quiet,
             show_timing=args.timing
         )

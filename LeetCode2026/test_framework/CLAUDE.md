@@ -8,25 +8,15 @@ This is a generic Python test framework designed for LeetCode-style algorithm pr
 
 ## Running Tests
 
-### Basic Usage
 ```bash
-# Run tests with default files (algorithm.py, test_cases.py)
-python main.py
-
-# Run specific algorithm and test files
-python main.py -a my_solution.py -f my_function -t my_tests.py
+# Run tests (test file auto-detected as <algorithm>_test.py)
+python main.py -a my_solution.py -f my_function
 
 # Show execution timing for each test
-python main.py --timing
+python main.py -a my_solution.py -f my_function --timing
 
 # Quiet mode (only show summary)
-python main.py --quiet
-```
-
-### Standalone Test Runner
-```bash
-# Run the self-contained test harness (legacy)
-python algo_perf.py
+python main.py -a my_solution.py -f my_function --quiet
 ```
 
 ## Architecture
@@ -50,11 +40,11 @@ python algo_perf.py
 
 ### File Structure Pattern
 
-**algorithm.py** - Algorithm implementation stub
-- Contains the function to be tested (e.g., `find_roots()`)
-- Implement your solution here
+**<name>.py** - Algorithm implementation
+- Contains the function to be tested
+- Example: `solution.py` with function `solve()`
 
-**test_cases.py** - Test case definitions
+**<name>_test.py** - Test case definitions (auto-detected from algorithm file)
 - Exports `TEST_CASES` list of dicts with structure:
   ```python
   {
@@ -63,10 +53,6 @@ python algo_perf.py
       "expected": expected_output
   }
   ```
-
-**algo_perf.py** - Legacy self-contained test harness
-- Contains both algorithm and test cases in a single file
-- Useful for standalone problem solving without dependencies
 
 ## Key Behaviors
 
@@ -84,8 +70,7 @@ Pass a `comparator` function to `TestRunner` for non-equality comparisons (e.g.,
 
 ## Typical Development Workflow
 
-1. Implement algorithm in `algorithm.py` (or custom file)
-2. Define test cases in `test_cases.py` (or custom file)
-3. Run `python main.py` to verify solution
+1. Create algorithm file (e.g., `solution.py`)
+2. Create test file with matching name (e.g., `solution_test.py`)
+3. Run `python main.py -a solution.py -f solve` to verify solution
 4. Use `--timing` flag to analyze performance
-5. For quick iterations, modify `algo_perf.py` as a self-contained workspace
